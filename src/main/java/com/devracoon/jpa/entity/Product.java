@@ -34,7 +34,7 @@ public class Product {
     @Column(name = "product_name", columnDefinition = "VARCHAR(255)")
     private String productName;
     
-    @OneToMany(mappedBy = "product" , targetEntity = Item.class , fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST , CascadeType.MERGE})
+    @OneToMany(mappedBy = "product" , targetEntity = Item.class , fetch = FetchType.LAZY , cascade = {CascadeType.REFRESH , CascadeType.PERSIST , CascadeType.MERGE , CascadeType.REMOVE} , orphanRemoval = true)
     private List<Item> items = new ArrayList<Item>();
     
 }

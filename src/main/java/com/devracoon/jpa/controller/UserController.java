@@ -41,9 +41,24 @@ public class UserController {
         return productId;
     }
     
+    @RequestMapping("/updateProductOrphan")
+    public String updateProductOrphan(String productId) throws Exception {
+        userService.saveProductOrphan(productId);
+        
+        return "Updaet OK";
+    }
+    
     @RequestMapping("/updateProduct")
     public String updateProduct(String productId , String productName) throws Exception {
         Product product = userService.updateProduct(productId, productName);
+        
+        return "Update Ok!";
+    }
+    
+    @RequestMapping("/updateProductRefresh")
+    
+    public String updateProductRefresh(String productId , String productName) throws Exception {
+        Product product = userService.updateProductRefresh(productId, productName);
         
         return "Update Ok!";
     }
@@ -58,6 +73,7 @@ public class UserController {
     
     @RequestMapping("/deleteProduct")
     public String deleteProduct(String productId) throws Exception {
+    	
         userService.deleteProduct(productId);
         
         return "Delete Ok!";

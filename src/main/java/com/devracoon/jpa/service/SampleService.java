@@ -13,7 +13,11 @@ public interface SampleService {
     
     public String saveProduct(String productName ) throws Exception;
     
+    public void saveProductOrphan(String productId) throws Exception;
+    
     public Product updateProduct(String productId , String productName ) throws Exception;
+    
+    public Product updateProductRefresh(String productId , String productName ) throws Exception;
     
     public String saveSampleData(String userName , String phoneNumber) throws Exception;
     

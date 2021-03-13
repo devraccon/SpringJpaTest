@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import com.devracoon.jpa.repository.ProductOrderRepository;
 import com.devracoon.jpa.repository.ProductRepository;
 import com.devracoon.jpa.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class SampleServiceImpl implements SampleService{
 
@@ -29,6 +34,9 @@ public class SampleServiceImpl implements SampleService{
     
     @Autowired
     private ProductOrderRepository productOrderRepo;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
     
     public Optional<User> findUserById(String userId) throws Exception {
         return userRepo.findById(userId);
@@ -80,6 +88,41 @@ public class SampleServiceImpl implements SampleService{
         return product;
     }
     
+    @Transactional
+    public Product updateProductRefresh(String productId , String productName ) throws Exception {
+        Product product = productRepo.findById(productId).get();
+        product.setProductName(productName);
+        String changeItemName = productName + " Item Change";
+        if(product.getItems().size() > 0 ) {
+            for(int i = 0 ; i < product.getItems().size() ; i++) {
+                Item item = product.getItems().get(i);
+                item.setItemName(changeItemName + i);
+            }
+//            엔티티를 Refresh할경우 Entity가 새로 생성된 경우 ID가 없어서 Refresh할때 Null Identifier 라는 에러 발생함.
+//            Item additem = new Item("Product Item ADD ");
+//            additem.setItemNumber("Product Item ADD Number");
+//            additem.setProduct(product);
+//            product.getItems().add(additem);
+            
+        }else {
+            for(int i = 0 ; i < 2 ; i++) {
+                Item item = new Item("Product Item " + i);
+                item.setItemNumber("Product Item "+ i +" Number");
+                item.setProduct(product);
+                product.getItems().add(item);
+            }
+        }
+        entityManager.refresh(product);
+        
+        log.info("Change Product Name : " + productName + " Current Producct Name : " + product.getProductName());
+        log.info("Change Item Name : " +  changeItemName + " Current Item Name : " + product.getItems().get(0).getItemName());
+        
+        productRepo.save(product);
+        
+        return product;
+    }
+    
+    
     
     @Transactional
     public String saveSampleData(String userName , String phoneNumber ) throws Exception {
@@ -117,13 +160,21 @@ public class SampleServiceImpl implements SampleService{
         productOrderRepo.save(order);
         
         return order.getOrderId();
-               
         
     }
     
     @Transactional
     public void deleteProduct(String productId) throws Exception {
-        productRepo.deleteById(productId);
+    	Product product = productRepo.findById(productId).get();
+        productRepo.delete(product);
+    }
+    
+    @Transactional
+    public void saveProductOrphan(String productId) throws Exception {
+    	Product product = productRepo.findById(productId).get();
+    	product.getItems().remove(0);
+    	
+        productRepo.save(product);
     }
     
     @Transactional
