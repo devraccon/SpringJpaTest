@@ -8,7 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.devracoon.jpa.entity.Item;
@@ -24,17 +27,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SampleServiceImpl implements SampleService{
 
-    @Autowired
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
     
-    @Autowired
-    private ProductRepository productRepo;
+    private final ProductRepository productRepo;
     
-    @Autowired
-    private ProductOrderRepository productOrderRepo;
-    
+    private final ProductOrderRepository productOrderRepo;
+
     @PersistenceContext
     private EntityManager entityManager;
     
@@ -47,7 +48,15 @@ public class SampleServiceImpl implements SampleService{
         System.out.println(product.get().getItems().size());
         return product.get();
     }
-    
+
+    public List<Product> findProductByCustom(String productName , String itemName) throws Exception{
+        return productRepo.findProductByCustom(productName , itemName);
+    }
+
+    public List<Product> findProductByCustom(String productName , String itemName , Pageable pageable )throws Exception{
+        return productRepo.findProductByCustomPasing(productName , itemName , pageable);
+    }
+
     @Transactional
     public String saveProduct(String productName ) throws Exception {
         Product product = new Product(productName);
