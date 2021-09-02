@@ -8,17 +8,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import com.devracoon.jpa.entity.*;
+import com.devracoon.jpa.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.devracoon.jpa.entity.Item;
-import com.devracoon.jpa.entity.Product;
-import com.devracoon.jpa.entity.ProductOrder;
-import com.devracoon.jpa.entity.ProductOrderItem;
-import com.devracoon.jpa.entity.User;
 import com.devracoon.jpa.repository.ProductOrderRepository;
 import com.devracoon.jpa.repository.ProductRepository;
 import com.devracoon.jpa.repository.UserRepository;
@@ -35,6 +32,8 @@ public class SampleServiceImpl implements SampleService{
     private final ProductRepository productRepo;
     
     private final ProductOrderRepository productOrderRepo;
+
+    private final ContentRepository contentRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -191,6 +190,14 @@ public class SampleServiceImpl implements SampleService{
         ProductOrder order = productOrderRepo.findById(orderId).get();
         productOrderRepo.delete(order);
         
+    }
+
+    public List<Contents> findContents(){
+        return contentRepository.findContentsByCustom();
+    }
+
+    public List<Contents> findContentsFunctionTest(){
+        return contentRepository.findContentsFunctionTest();
     }
         
        

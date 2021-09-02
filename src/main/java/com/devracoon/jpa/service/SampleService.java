@@ -3,6 +3,7 @@ package com.devracoon.jpa.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.devracoon.jpa.entity.Contents;
 import com.devracoon.jpa.entity.Product;
 import com.devracoon.jpa.entity.User;
 import org.springframework.data.domain.Pageable;
@@ -30,4 +31,9 @@ public interface SampleService {
     public void deleteProduct(String productId) throws Exception;
     
     public void deleteSampleData(String orderId) throws Exception;
+
+    public List<Contents> findContents();
+
+    public List<Contents> findContentsFunctionTest();
+
 }

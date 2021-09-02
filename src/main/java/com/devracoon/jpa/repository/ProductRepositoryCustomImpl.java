@@ -1,7 +1,10 @@
 package com.devracoon.jpa.repository;
 
 import com.devracoon.jpa.entity.Product;
+import com.devracoon.jpa.entity.QContents;
+import com.devracoon.jpa.entity.QItem;
 import com.devracoon.jpa.entity.QProduct;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +25,6 @@ public class ProductRepositoryCustomImpl extends QuerydslRepositorySupport imple
         QProduct product = QProduct.product;
         List<Product> products = queryFactory.selectFrom(product).leftJoin(product.items).fetchJoin()
                 .where(SamplePredicate.productPredicate(productName,  itemName)).fetch();
-
         return products;
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.devracoon.jpa.entity.Contents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,7 @@ public class UserController {
         
         return product.getProductId();
     }
+
 
     @GetMapping("/findQueryDslTest")
     public List<ProductDto> findQueryDslTest(String productName , String itemName) throws Exception {
@@ -105,5 +107,19 @@ public class UserController {
         userService.deleteSampleData(orderId);
         
         return "Delete Ok!";
+    }
+
+    @GetMapping("/findContents")
+    public List<Contents> findContents() throws Exception {
+        List<Contents> contents = userService.findContents();
+
+        return contents;
+    }
+
+    @GetMapping("/findContentsFunctionTest")
+    public List<Contents> findContentsFunctionTest() throws Exception {
+        List<Contents> contents = userService.findContentsFunctionTest();
+
+        return contents;
     }
 }
